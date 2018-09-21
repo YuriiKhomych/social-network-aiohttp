@@ -1,5 +1,6 @@
 aiodns==1.1.1
 aiohttp==3.4.4
+aiohttp-session==2.6.0
 async-timeout==3.0.0
 attrs==18.2.0
 cchardet==2.1.1
