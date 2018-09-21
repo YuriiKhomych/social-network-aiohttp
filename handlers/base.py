@@ -25,7 +25,7 @@ class Login(web.View):
         last_visit = session['last_visit']
 
         db = self.app['db']
-        user = await User.get_user(uid=1)
+        user = await User.get_user(uid=1, db=db)
         document = await db.test.find_one()
 
         return dict(last_visit='login Aiohttp!, Last visited: {}'.format(last_visit))
