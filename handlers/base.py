@@ -59,3 +59,13 @@ class Signup(web.View):
 
         location = self.app.router['login'].url_for()
         return web.HTTPFound(location=location)
+
+
+class Logout(web.View):
+
+    async def get(self):
+        session = await get_session(self)
+        del session['user']
+
+        location = self.app.router['login'].url_for()
+        return web.HTTPFound(location=location)
