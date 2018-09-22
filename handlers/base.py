@@ -73,3 +73,15 @@ class Logout(web.View):
 
         location = self.app.router['login'].url_for()
         return web.HTTPFound(location=location)
+
+
+class PostView(web.View):
+
+    async def post(self):
+        data = await self.post()
+        session = await get_session(self)
+        if 'user' in session and data['message']:
+            await Post.create_post(db=self.app['db'], user_id=session['user']['_id'], message=data['message'])
+            return web.HTTPFound(location=self.app.router['index'].url_for())
+
+        return web.HTTPForbidden()
