@@ -1,10 +1,9 @@
 import hashlib
+from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 
 class User:
-
-    collection = None
 
     def __init__(self):
         pass
@@ -33,3 +32,8 @@ class User:
             return result
         else:
             return dict(error='Missing user data parameters')
+
+    @staticmethod
+    async def save_avatar_url(db: AsyncIOMotorDatabase, user_id: str, url: str):
+        if url and user_id:
+            db.users.update_one({'_id': ObjectId(user_id)}, {'$set': {'avatar_url': url}})
