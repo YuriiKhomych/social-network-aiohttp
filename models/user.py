@@ -51,3 +51,7 @@ class User:
         query = {'_id': {'$ne': ObjectId(user_id)}}
         users = await db.users.find(query).to_list(limit)
         return users
+
+    @staticmethod
+    async def add_friend(db: AsyncIOMotorDatabase, user_id: str, friend_id: str):
+        await db.users.update_one({'_id': ObjectId(user_id)}, {'$addToSet': {'friends': ObjectId(friend_id)}})
