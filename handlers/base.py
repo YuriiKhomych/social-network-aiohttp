@@ -1,6 +1,5 @@
+import hashlib
 import aiohttp_jinja2
-
-from datetime import datetime
 
 from aiohttp import web
 from aiohttp_session import get_session
@@ -24,23 +23,21 @@ class Login(web.View):
 
     @aiohttp_jinja2.template('login.html')
     async def get(self):
-        session = await get_session(self)
-        session['last_visit'] = str(datetime.utcnow())
-        last_visit = session['last_visit']
-
-        db = self.app['db']
-        user = await User.get_user(uid=1, db=db)
-        document = await db.test.find_one()
-
-        return dict(last_visit='login Aiohttp!, Last visited: {}'.format(last_visit))
+        return dict()
 
     async def post(self):
         data = await self.post()
-        login = data['login']
+        email = data['email']
         password = data['password']
 
-        session = await get_session(self)
-        session['user'] = {'login': login}
+        user = await User.get_user(db=self.app['db'], email=email)
+        if user.get('error'):
+            location = self.app.router['login'].url_for()
+            return web.HTTPFound(location=location)
+
+        if user['password'] == hashlib.sha256(password.encode('utf8')).hexdigest():
+            session = await get_session(self)
+            session['user'] = user
 
         location = self.app.router['index'].url_for()
         return web.HTTPFound(location=location)
