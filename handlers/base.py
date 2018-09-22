@@ -44,5 +44,16 @@ class Login(web.View):
 
 class Signup(web.View):
 
+    @aiohttp_jinja2.template('signup.html')
     async def get(self):
-        return web.Response(text='signup Aiohttp!')
+        return dict()
+
+    async def post(self):
+        data = await self.post()
+        result = await User.create_new_user(db=self.app['db'], data=data)
+        if not result or result.get('error'):
+            location = self.app.router['signup'].url_for()
+            return web.HTTPFound(location=location)
+
+        location = self.app.router['login'].url_for()
+        return web.HTTPFound(location=location)
