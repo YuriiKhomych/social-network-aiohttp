@@ -5,6 +5,7 @@ from aiohttp import web
 from aiohttp_session import get_session
 
 from models.user import User
+from models.post import Post
 
 
 class Index(web.View):
@@ -14,9 +15,12 @@ class Index(web.View):
         conf = self.app['config']
         session = await get_session(self)
         user = {}
+        posts = []
         if 'user' in session:
             user = session['user']
-        return dict(conf=conf, user=user)
+            posts = await Post.get_posts_by_user(db=self.app['db'], user_id=user['_id'])
+
+        return dict(conf=conf, user=user, posts=posts)
 
 
 class Login(web.View):
