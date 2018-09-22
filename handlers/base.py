@@ -13,7 +13,11 @@ class Index(web.View):
     @aiohttp_jinja2.template('index.html')
     async def get(self):
         conf = self.app['config']
-        return dict(conf=conf)
+        session = await get_session(self)
+        user = {}
+        if 'user' in session:
+            user = session['user']
+        return dict(conf=conf, user=user)
 
 
 class Login(web.View):
