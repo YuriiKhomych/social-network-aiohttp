@@ -51,8 +51,9 @@
         <li>{{ post.message }} | {{ post.date_created.strftime('%Y-%m-%d %H:%M:%S') }}</li>
     {% endfor %}
     </ul>
-    <pre>{{ friends }}</pre>
-
+    {% for friend in friends %}
+    <p>{{ friend.first_name }} {{ friend.last_name }}</p>
+    {% endfor %}}
 {% endif %}
 
 </body>
