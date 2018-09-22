@@ -52,7 +52,8 @@ class Signup(web.View):
     async def post(self):
         data = await self.post()
         result = await User.create_new_user(db=self.app['db'], data=data)
-        if not result or result.get('error'):
+        if not result:
+            # todo: show error on ui!
             location = self.app.router['signup'].url_for()
             return web.HTTPFound(location=location)
 
